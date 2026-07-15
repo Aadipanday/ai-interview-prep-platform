@@ -1,0 +1,21 @@
+@use "./style/button.scss";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html,
+#root {
+   
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    background-color: #272727;
+    color: white;
+}
+
+.highlight{
+    color: #4e78da
+}
