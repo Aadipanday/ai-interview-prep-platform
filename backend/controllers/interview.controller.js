@@ -4,23 +4,25 @@ import interviewReportModel from "../models/interviewReport.model.js";
 
 export async function generateInterViewReportController(req,res) {
 
-   
-   
     try {
+        if (!req.file) {
+            return res.status(400).json({ message: "Please upload a resume PDF." });
+        }
+
         const parser = new PDFParse({ data: req.file.buffer });
         const resumeContent = await parser.getText();
         await parser.destroy();
 
         const { selfDescription, jobDescription } = req.body;
 
-        const interviewReportByAi = await generatInterviewReport({
+        const interviewReportByAi = await generateInterviewReport({
             resume: resumeContent.text,
             selfDescription,
             jobDescription
         });
 
         const interviewReport = await interviewReportModel.create({
-            user: req.user.id,
+            user: req.user.Id,
             resume: resumeContent.text,
             selfDescription,
             jobDescription,
@@ -41,7 +43,7 @@ export async function generateInterViewReportController(req,res) {
 export async function getInterviewReportByIdController(req,res){
     const { interviewId } = req.params
 
-    const interviewReport = await interviewReportModel.findOne({ _id: interviewId, user: req.user.id })
+    const interviewReport = await interviewReportModel.findOne({ _id: interviewId, user: req.user.Id })
 
     if(!interviewReport) {
         return res.status(404).json({
@@ -57,7 +59,7 @@ export async function getInterviewReportByIdController(req,res){
 
 export async function getAllInterviewReportsController(req, res) {
   const interviewReports = await interviewReportModel
-    .find({ user: req.user.id })
+    .find({ user: req.user.Id })
     .sort({ createdAt: -1 })
     .select(
       "-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -strategicAdvice -skillGaps -preparationPlan"
@@ -76,7 +78,7 @@ export async function getAllInterviewReportsController(req, res) {
 export async function generateResumePdfController(req,res) {
     const {interviewReportId} = req.params;
 
-    const interviewReport = await interviewReportModel.findById(interviewReportId);
+    const interviewReport = await interviewReportModel.findOne({ _id: interviewReportId, user: req.user.Id });
 
     if(!interviewReport){
         return res.status(404).json({

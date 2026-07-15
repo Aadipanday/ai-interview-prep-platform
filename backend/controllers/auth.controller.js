@@ -50,8 +50,7 @@ export const registerUserController = async (req, res) => {
                 id: newUser._id,
                 name: newUser.name,
                 email: newUser.email
-            },
-            token
+            }
         });
 
     } catch (error) {
@@ -102,8 +101,7 @@ export const loginUserController = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email
-            },
-            token
+            }
         });
     } catch (error) {
         console.error("Error logging in user:", error);

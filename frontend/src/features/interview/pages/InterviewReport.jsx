@@ -1,4 +1,3 @@
-import React from "react";
 import Interview from "../ui/Interview";
 import "../style/interview.scss";
 

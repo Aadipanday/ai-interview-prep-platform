@@ -1,6 +1,6 @@
-import generatInterviewReport from "./services/ai.service.js";
+import { generateInterviewReport } from "./services/ai.service.js";
 
-const result = await generatInterviewReport({
+const result = await generateInterviewReport({
     resume: "Sample resume: React, Node.js, MongoDB developer with 2 projects.",
     selfDescription: "I am a quick learner aiming for a web dev internship.",
     jobDescription: "Looking for a Web Development Intern skilled in MERN stack."
