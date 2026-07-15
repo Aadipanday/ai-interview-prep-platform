@@ -79,6 +79,8 @@ Open `http://localhost:5173` in your browser. The backend is configured for this
 | GET | `/api/interview/report/:interviewId` | Get one report |
 | POST | `/api/interview/resume/pdf/:interviewReportId` | Generate a resume PDF |
 
-## Security
+## Notes
 
-Never commit `.env` files, API keys, tokens, or `node_modules`. Install dependencies from the committed `package-lock.json` files instead.
+- Keep your API keys and database credentials in `backend/.env`.
+- Do not commit `.env` files or `node_modules`; both are already ignored by Git.
+- Use `npm install` to restore dependencies from the lock files.
