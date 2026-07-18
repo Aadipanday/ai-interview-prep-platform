@@ -6,7 +6,7 @@
   align-items: center;
   gap: 1.25rem;
   padding: 3rem 2rem;
-  background: #f4f6fb;
+  background: radial-gradient(circle at top, #202b44 0%, #11151f 48%, #0b0e15 100%);
 
   svg {
     width: 1em;
@@ -26,7 +26,7 @@
       margin: 0.2rem 0 0;
       font-size: 1.6rem;
       font-weight: 800;
-      color: #1a2030;
+      color: #a3a7b3;
       letter-spacing: -0.01em;
     }
   }
@@ -43,7 +43,7 @@
   .interview-card {
     width: min(920px, 100%);
     background: linear-gradient(160deg, #1c2333 0%, #11151f 70%);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.26);
     border-radius: 1.75rem;
     padding: 2.75rem 3rem 2.5rem;
     box-shadow: 0 30px 60px rgba(15, 20, 30, 0.35);
@@ -311,7 +311,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.7rem 1.3rem;
-    background: #ffffff;
+    background: #dadce1;
     border: 1px solid #e3e7f0;
     border-radius: 999px;
     color: #2b3242;
@@ -357,7 +357,7 @@
     }
 
     h2 {
-      color: #2b3242;
+      color: #ffffff;
       font-size: 1.15rem;
       font-weight: 700;
       margin: 0;
@@ -378,8 +378,8 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem 1.25rem;
-    background: #ffffff;
-    border: 1px solid #e3e7f0;
+    background: linear-gradient(160deg, #1c2333 0%, #11151f 70%);
+    border: 1px solid rgba(255, 255, 255, 0.26);
     border-radius: 1rem;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(30, 40, 70, 0.04);
@@ -419,7 +419,7 @@
         margin: 0;
         font-size: 0.95rem;
         font-weight: 700;
-        color: #1a2030;
+        color: #e0e5f3;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

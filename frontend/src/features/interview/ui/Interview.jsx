@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../style/interview.scss";
 import { useInterview } from "../hooks/useInterview.js";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const ChevronIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,6 +23,30 @@ const CaretIcon = () => (
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const ArrowLeftIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M19 12H5M11 6l-6 6 6 6"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const PlayIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M7 5.5v13l11-6.5-11-6.5z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+      fill="currentColor"
     />
   </svg>
 );
@@ -95,6 +119,7 @@ const Interview = () => {
   // "getReportbyId" (lowercase b) which never existed on the hook.
   const { report, loading, downloadResume } = useInterview();
   const { interviewId } = useParams();
+  const navigate = useNavigate();
 
   const handleDownloadResume = async () => {
     setDownloadError("");
@@ -169,6 +194,16 @@ const Interview = () => {
   return (
     <section className="interview-report">
       <nav className="report-nav">
+        <button
+          type="button"
+          className="back-btn"
+          onClick={() => navigate("/")}
+          aria-label="Back to interview plans"
+        >
+          <ArrowLeftIcon />
+          Back
+        </button>
+
         {typeof report.matchScore === "number" && (
           <div className="match-score">
             <span className="match-score__value">{report.matchScore}%</span>
@@ -190,16 +225,32 @@ const Interview = () => {
           </button>
         ))}
 
-        <button
-          onClick={handleDownloadResume}
-          className="btn download-resume-btn"
-          type="button"
-          disabled={isDownloading}
-        >
-          <SparkleWandIcon />
-          {isDownloading ? "Preparing..." : "Download Resume"}
-        </button>
-        {downloadError && <p className="download-error">{downloadError}</p>}
+        {/* Grouped together under one wrapper with a single margin-top:
+            auto, instead of each button carrying its own margin-top: auto.
+            Two siblings both using margin-top: auto in the same flex
+            column fight over the same leftover space and end up looking
+            inconsistent — grouping them fixes that and keeps the two
+            action buttons visually paired at the bottom of the nav. */}
+        <div className="nav-actions">
+          <button
+            onClick={() => navigate(`/interview/${interviewId || report._id}/mock`)}
+            className="btn mock-interview-btn"
+            type="button"
+          >
+            <PlayIcon />
+            Start Mock Interview
+          </button>
+          <button
+            onClick={handleDownloadResume}
+            className="btn download-resume-btn"
+            type="button"
+            disabled={isDownloading}
+          >
+            <SparkleWandIcon />
+            {isDownloading ? "Preparing..." : "Download Resume"}
+          </button>
+          {downloadError && <p className="download-error">{downloadError}</p>}
+        </div>
       </nav>
 
       <div className="report-main">{renderContent()}</div>

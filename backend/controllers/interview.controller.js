@@ -1,5 +1,5 @@
 import { PDFParse } from "pdf-parse"
-import {generateInterviewReport, generateResumePdf} from "../services/ai.service.js";
+import { evaluateInterviewAnswer, generateInterviewReport, generateResumePdf } from "../services/ai.service.js";
 import interviewReportModel from "../models/interviewReport.model.js";
 
 export async function generateInterViewReportController(req,res) {
@@ -97,3 +97,25 @@ export async function generateResumePdfController(req,res) {
 
     res.send(pdfBuffer);
 }
+
+export async function evaluateMockAnswerController(req, res) {
+    const { interviewId } = req.params;
+    const { question, answer, idealAnswer } = req.body;
+
+    if (!question || !answer?.trim()) {
+        return res.status(400).json({ message: "A question and answer are required." });
+    }
+
+    const report = await interviewReportModel.findOne({ _id: interviewId, user: req.user.Id }).select("_id");
+    if (!report) return res.status(404).json({ message: "Interview report not found." });
+
+    try {
+        const feedback = await evaluateInterviewAnswer({ question, answer, idealAnswer });
+        return res.status(200).json({ feedback });
+    } catch (error) {
+        console.error("evaluateMockAnswerController error:", error);
+        return res.status(500).json({ message: "Failed to evaluate your answer." });
+    }
+}
+
+

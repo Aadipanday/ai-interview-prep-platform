@@ -91,6 +91,28 @@ const resumePdfSchema = {
     required: ["html"]
 };
 
+const answerFeedbackSchema = {
+    type: Type.OBJECT,
+    properties: {
+        score: { type: Type.NUMBER, description: "A score from 0 to 100." },
+        feedback: { type: Type.STRING, description: "Concise, constructive feedback for the candidate." },
+        strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
+        improvements: { type: Type.ARRAY, items: { type: Type.STRING } }
+    },
+    required: ["score", "feedback", "strengths", "improvements"]
+};
+
+export async function evaluateInterviewAnswer({ question, answer, idealAnswer }) {
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: `You are an encouraging interview coach. Review this interview answer.\nQuestion: ${question}\nCandidate answer: ${answer}\nSuggested answer guidance: ${idealAnswer || "Not provided"}\nGive specific, honest feedback.`,
+        config: { responseMimeType: "application/json", responseSchema: answerFeedbackSchema, maxOutputTokens: 1024 }
+    });
+
+    if (!response.text) throw new Error("Gemini returned an empty response.");
+    return JSON.parse(response.text);
+}
+
 export async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
     const prompt = `Generate an interview report for a candidate with the following details:
           Resume: ${resume}

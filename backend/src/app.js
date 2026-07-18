@@ -10,10 +10,27 @@ const app = express();
 app.use(express.json());
 
 app.use(cookieParser());
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
-}));
+
+const allowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+];
+ 
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            // `origin` is undefined for same-origin/non-browser requests
+            // (e.g. curl, server-to-server) — allow those through too.
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error(`CORS blocked for origin: ${origin}`));
+            }
+        },
+        credentials: true, // required since the frontend sends cookies via withCredentials
+    })
+);
 
 
 

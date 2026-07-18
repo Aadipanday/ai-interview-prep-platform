@@ -1,6 +1,6 @@
 import express from "express"
 import authMiddleware from "../middleware/auth.middleware.js";
-import {generateInterViewReportController, getInterviewReportByIdController,getAllInterviewReportsController, generateResumePdfController} from "../controllers/interview.controller.js";
+import { evaluateMockAnswerController, generateInterViewReportController, getInterviewReportByIdController, getAllInterviewReportsController, generateResumePdfController } from "../controllers/interview.controller.js";
 import upload from "../middleware/file.middleware.js";
 import { generateResumePdf } from "../services/ai.service.js";
 
@@ -24,6 +24,8 @@ interviewRouter.post("/",authMiddleware, upload.single("resume"), generateInterV
 
 interviewRouter.get("/report/:interviewId", authMiddleware, getInterviewReportByIdController)
 
+interviewRouter.post("/:interviewId/mock-feedback", authMiddleware, evaluateMockAnswerController)
+
 /**
  * @route GET /api/interview/
  * @description get all interview reports of logged in user.
@@ -39,5 +41,7 @@ interviewRouter.get("/", authMiddleware , getAllInterviewReportsController)
  */
 
 interviewRouter.post("/resume/pdf/:interviewReportId", authMiddleware, generateResumePdfController)
+
+
 
 export default interviewRouter;

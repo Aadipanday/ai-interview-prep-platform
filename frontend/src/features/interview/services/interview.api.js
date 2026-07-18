@@ -56,6 +56,11 @@ export const generateResumePdf = async ({interviewReportId}) => {
     return response.data;
 }
 
+export const evaluateMockAnswer = async ({ interviewId, question, answer, idealAnswer }) => {
+    const response = await api.post(`/api/interview/${interviewId}/mock-feedback`, { question, answer, idealAnswer });
+    return response.data.feedback;
+};
+
 // Add this alongside your existing exports in services/interview.api.js
 // (uses the same `api` axios instance already defined there).
 //
@@ -73,3 +78,5 @@ export const deleteInterviewReport = async (interviewId) => {
         throw error;
     }
 };
+
+

@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: flex-start;
   padding: 3rem 2rem;
-  background: #f4f6fb;
+  background: radial-gradient(circle at top, #202b44 0%, #11151f 48%, #0b0e15 100%);
 }
 
 .interview-report {
@@ -14,7 +14,7 @@
   display: grid;
   grid-template-columns: 220px 1fr 240px;
   background: linear-gradient(160deg, #1c2333 0%, #11151f 70%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 1.75rem;
   box-shadow: 0 30px 60px rgba(15, 20, 30, 0.35);
   min-height: 560px;
@@ -24,6 +24,39 @@
     width: 1em;
     height: 1em;
     display: block;
+  }
+
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: flex-start;
+    margin-bottom: 0.75rem;
+    padding: 0.45rem 0.7rem 0.45rem 0.5rem;
+    border: none;
+    border-radius: 0.65rem;
+    background: transparent;
+    color: #9aa3b2;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    svg {
+      color: #9aa3b2;
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+
+    &:hover {
+      color: #e7eaf0;
+      background: rgba(255, 255, 255, 0.06);
+
+      svg {
+        color: #6f97ff;
+        transform: translateX(-2px);
+      }
+    }
   }
 
   .match-score {
@@ -102,8 +135,63 @@
     }
   }
 
-  .download-resume-btn {
+  // BUG FIX: mock-interview-btn and download-resume-btn both used to carry
+  // their own `margin-top: auto` independently. In the same flex column,
+  // only the first one actually gets pushed by the leftover space — the
+  // second ends up stacked right after it with no space left to consume,
+  // so the pairing looked accidental rather than intentional, and
+  // mock-interview-btn's much lighter styling made it look unfinished next
+  // to the polished download button. Wrapping both in one container with a
+  // single margin-top: auto fixes the layout, and mock-interview-btn now
+  // matches the same sizing/weight language as download-resume-btn.
+  .nav-actions {
     margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .mock-interview-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(111, 151, 255, 0.35);
+    border-radius: 0.85rem;
+    background: rgba(79, 125, 250, 0.1);
+    color: #dce6ff;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+
+    svg {
+      color: #8eaeff;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background: rgba(79, 125, 250, 0.18);
+      border-color: rgba(111, 151, 255, 0.55);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+
+  .download-resume-btn {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -358,5 +446,158 @@
       border-right: none;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
+  }
+}
+
+.mock-page {
+  min-height: 100vh;
+  padding: 3rem 1.5rem;
+  background: radial-gradient(circle at top, #202b44 0%, #11151f 48%, #0b0e15 100%);
+  display: grid;
+  place-items: start center;
+}
+
+.mock-card {
+  width: min(1040px, 100%);
+  padding: 2.25rem 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  color: #f2f4f8;
+  background: linear-gradient(160deg, #1c2333, #11151f);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+}
+
+.mock-card__header {
+  display: flex;
+  justify-content: space-between;
+  color: #9aa3b2;
+  font-size: 0.82rem;
+}
+
+.mock-card__header a {
+  color: #8eaeff;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.mock-progress {
+  height: 0.35rem;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, .1);
+}
+
+.mock-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #4f7dfa;
+  transition: width .2s ease;
+}
+
+.mock-card__eyebrow {
+  color: #6f97ff;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mock-card h1 {
+  margin: .5rem 0 1.75rem;
+  font-size: clamp(1.25rem, 3vw, 1.8rem);
+  line-height: 1.35;
+}
+
+.mock-card textarea {
+  width: 100%;
+  min-height: 180px;
+  box-sizing: border-box;
+  padding: 1rem;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 1rem;
+  background: #151a26;
+  color: #f2f4f8;
+  font: inherit;
+  line-height: 1.6;
+}
+
+.mock-primary {
+  margin-top: 1rem;
+  padding: .85rem 1.2rem;
+  border: 0;
+  border-radius: .85rem;
+  background: #4f7dfa;
+  color: white;
+  font: 700 .9rem inherit;
+  cursor: pointer;
+}
+
+.mock-primary:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.mock-error {
+  color: #f4746a;
+  font-size: .85rem;
+}
+
+.mock-feedback {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(111, 151, 255, .25);
+  border-radius: 1rem;
+  background: rgba(79, 125, 250, .08);
+}
+
+.mock-score {
+  display: inline-grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  float: right;
+  border-radius: 50%;
+  color: #a9c0ff;
+  background: rgba(79, 125, 250, .18);
+  font-weight: 800;
+}
+
+.mock-feedback p {
+  margin: 0;
+  color: #d7dae2;
+  line-height: 1.6;
+}
+
+.mock-feedback__lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.mock-feedback h2 {
+  margin: 0 0 .5rem;
+  color: #a9c0ff;
+  font-size: .82rem;
+}
+
+.mock-feedback ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #aeb6c4;
+  font-size: .82rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 560px) {
+  .mock-card {
+    padding: 1.25rem;
+  }
+
+  .mock-feedback__lists {
+    grid-template-columns: 1fr;
   }
 }
