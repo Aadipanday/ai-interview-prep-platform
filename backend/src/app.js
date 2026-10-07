@@ -32,9 +32,13 @@ app.use(
     })
 );
 
-
+app.get("/test", (req, res) => {
+    res.json({ message: "Backend is working" });
+});
 
 app.use("/api/auth", authRouter);
 app.use("/api/interview", interviewRouter);
+
+
 
 export default app;

@@ -9,12 +9,13 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
-connectToDB();
+
 // console.log("Gemini Key:", process.env.GOOGLE_GENAI_API_KEY);
 
  
-
+connectToDB();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
 

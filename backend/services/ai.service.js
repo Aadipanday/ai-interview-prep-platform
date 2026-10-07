@@ -156,19 +156,45 @@ Think carefully about how well the candidate's actual skills and experience matc
 
 /**
  * Renders HTML to a PDF buffer using a headless browser.
- * Completed: this was previously just a dangling function signature with
+
  * no parameters or body, which made the file a syntax error on its own.
  */
 async function generatePdfFromHtml(html) {
     const browser = await puppeteer.launch({
-        headless: "new",
-        args: ["--no-sandbox", "--disable-setuid-sandbox"]
+        headless: true,
+        args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-web-security",
+            "--disable-features=IsolateOrigins,site-per-process"
+        ]
     });
 
     try {
         const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
-        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+
+        // Security: disable JavaScript execution to prevent client-side script injection
+        await page.setJavaScriptEnabled(false);
+
+        // Security: block external and local network requests to prevent SSRF
+        await page.setRequestInterception(true);
+        page.on("request", (req) => {
+            const url = req.url();
+            // Only allow inline data: URLs (e.g. data:image/...), abort all external or file:// requests
+            if (url.startsWith("data:")) {
+                req.continue();
+            } else {
+                req.abort();
+            }
+        });
+
+        // Set content with a strict timeout to prevent indefinite hangs
+        await page.setContent(html, { waitUntil: "load", timeout: 10000 });
+        const pdfBuffer = await page.pdf({
+            format: "A4",
+            printBackground: true,
+            margin: { top: "15mm", right: "15mm", bottom: "15mm", left: "15mm" }
+        });
         return pdfBuffer;
     } finally {
         await browser.close();
@@ -176,11 +202,7 @@ async function generatePdfFromHtml(html) {
 }
 
 export async function generateResumePdf({ resume, selfDescription, jobDescription }) {
-    // BUG FIX: previously used z.object(...) / zodToJsonSchema(...) without
-    // importing either, plus a variable-name mismatch (resumepdfSchema vs
-    // resumePdfSchema). Switched to the same Type-based schema format
-    // already used above, so no extra dependency is needed and the schema
-    // is guaranteed to be defined and correctly named.
+   
     const prompt = `Generate a tailored resume for a candidate with the following details:
           Resume: ${resume}
           Self Description: ${selfDescription}
@@ -210,9 +232,7 @@ export async function generateResumePdf({ resume, selfDescription, jobDescriptio
 
         const { html } = JSON.parse(response.text);
 
-        // BUG FIX: the function previously stopped here — it parsed the
-        // HTML out of the model response but never converted it to a PDF
-        // or returned anything at all.
+      
         const pdfBuffer = await generatePdfFromHtml(html);
         return pdfBuffer;
     } catch (err) {
